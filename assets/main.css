@@ -6,36 +6,57 @@ body {
 #board {
   margin: auto;
   margin-top: 100px;
-  width: 456px;
-  height: auto;
+  width: 450px;
+  height: 450px;
   border: 2px solid #64382B;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  /* flex-wrap: wrap; */
   box-sizing: content-box;
 }
 
 .sudoku-box {
-  display: flex;
-  flex-wrap: wrap;
-  width: 150px;
-  height: 150px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   border: 1px solid #64382B;
-  /* box-sizing: border-box; */
 }
 
 .sudoku-cell {
+  position: relative;
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 50px;
-  height: 50px;
+  /* width: 50px;
+  height: 50px; */
   border: 1px solid #64382B;
   box-sizing: border-box;
   color: #64382B;
-  font-size: 3vw;
+  font-size: 5vw;
   cursor: pointer;
+  vertical-align: center;
+}
+
+.sudoku-cell-possibilities {
+  position: absolute;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  z-index: 10;
+  font-size: 2vw;
 }
 
 .selected {
   background-color: #b49274;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
 }
