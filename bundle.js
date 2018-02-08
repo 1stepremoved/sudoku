@@ -132,7 +132,11 @@ document.addEventListener("DOMContentLoaded", ()=> {
       selectedCell.addClass("selected");
     } else if (e.keyCode === 8 || e.keyCode === 32 || e.keyCode === 48) {
       cell.currentValue = 0;
-      board.valueVisible = false;
+      if (cell.valueVisible) {
+        cell.valueVisible = false;
+      } else {
+        cell.possibles = [false,false,false,false,false,false,false,false,false];
+      }
       board.render();
     }
   });
