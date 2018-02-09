@@ -65,19 +65,12 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const inputCode = {
-  49: 1,
-  50: 2,
-  51: 3,
-  52: 4,
-  53: 5,
-  54: 6,
-  55: 7,
-  56: 8,
-  57: 9
-};
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sudoku__ = __webpack_require__(1);
+
 
 document.addEventListener("DOMContentLoaded", ()=> {
   setupSudoku();
@@ -141,7 +134,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
     }
   });
 
-  let board = new SudokuBoard();
+  let board = new __WEBPACK_IMPORTED_MODULE_0__sudoku__["a" /* default */]();
   board.render();
 });
 
@@ -172,6 +165,12 @@ const setupSudoku = () => {
   }
 };
 
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 class SudokuBoard {
   constructor() {
     this.boxes = [];
@@ -233,6 +232,9 @@ class SudokuCell {
     this.possibles[idx] = !this.possibles[idx];
   }
 }
+
+
+/* harmony default export */ __webpack_exports__["a"] = (SudokuBoard);
 
 
 /***/ })
