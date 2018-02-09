@@ -111,6 +111,7 @@ body {
   font-size: 35px;
   box-sizing: border-box;
   text-align: center;
+  cursor: pointer;
 }
 
 .number-button:last-of-type {
