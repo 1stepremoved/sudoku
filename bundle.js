@@ -146,7 +146,6 @@ document.addEventListener("DOMContentLoaded", ()=> {
   });
 
   let board = new __WEBPACK_IMPORTED_MODULE_0__sudoku__["a" /* default */]();
-  board.render();
 });
 
 const setupSudoku = () => {
@@ -208,13 +207,19 @@ class SudokuBoard {
     }
     let boxIdx, sudokuCell;
     for (let i = 0; i < 81; i++) {
-      sudokuCell = new SudokuCell((i % 9) + 1, i, false);
+      sudokuCell = new SudokuCell(0, i, false);
       this.cells.push(sudokuCell);
       boxIdx = (Math.floor(i / 27) * 3) + Math.floor((i % 9) / 3);
       sudokuCell.box = this.boxes[boxIdx];
       this.boxes[boxIdx].cells.push(sudokuCell);
     }
     this.render = this.render.bind(this);
+    this.populate = this.populate.bind(this);
+    this.populateBoard = this.populateBoard.bind(this);
+
+
+    this.populateBoard();
+    this.render();
   }
 
   render() {
@@ -237,8 +242,89 @@ class SudokuBoard {
     }
   }
 
-  fillGrid() {
-    
+  populateBoard() {
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      this.cells[i].possibles = [0,0,0,0,0,0,0,0,0];
+    }
+    // let indii = new Array(81);
+    // for (let i = 0, len = indii.length; i < len; i++) {
+    //   indii[i] = i;
+    // }
+    // let pos1, pos2, temp;
+    // for (let i = 0; i < 1000; i++) {
+    //   pos1 = Math.floor(Math.random() * 81);
+    //   pos2 = Math.floor(Math.random() * 81);
+    //   temp = indii[pos1];
+    //   indii[pos1] = indii[pos2];
+    //   indii[pos2] = temp;
+    // }
+    // while (true){
+    //   if (this.populate(0, indii)) {
+    //     break;
+    //   }
+    // }
+    this.populate(0);
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+    }
+  }
+
+  populate(cellIdx) {
+    if (cellIdx >= 81) {
+      return true;
+    }
+    let indii = new Array(9);
+    let cell = this.cells[cellIdx];
+    for (let i = 0, len = indii.length; i < len; i++) {
+      indii[i] = i;
+    }
+    let pos1, pos2, temp;
+    for (let i = 0; i < 100; i++) {
+      pos1 = Math.floor(Math.random() * 9);
+      pos2 = Math.floor(Math.random() * 9);
+      temp = indii[pos1];
+      indii[pos1] = indii[pos2];
+      indii[pos2] = temp;
+    }
+    for (let i = 0, len = cell.possibles.length; i < len; i++) {
+      let posIdx = indii[i];
+      if (cell.possibles[posIdx]) {
+        continue;
+      }
+      cell.currentValue = posIdx + 1;
+
+      // change neigbhors possibles
+      for (let j = 0, boxLen = cell.box.cells.length; j < boxLen; j++) {
+        cell.box.cells[j].possibles[posIdx] += 1;
+      }
+      let startRow = Math.floor(cellIdx / 9) * 9;
+      for (let j = 0; j < 9; j++) {
+        // debugger
+        this.cells[startRow + j].possibles[posIdx] += 1;
+      }
+      let startCol = Math.floor(cellIdx % 9);
+      for (let j = 0; j < 9; j++) {
+        this.cells[(9 * j) + startCol].possibles[posIdx] += 1;
+      }
+
+
+      if (this.populate(cellIdx + 1)) {
+        return true;
+      } else {
+        // change neighbors possibles
+        for (let j = 0, boxLen = cell.box.cells.length; j < boxLen; j++) {
+          cell.box.cells[j].possibles[posIdx] -= 1;
+        }
+        for (let j = 0; j < 9; j++) {
+          this.cells[startRow + j].possibles[posIdx] -= 1;
+        }
+        for (let j = 0; j < 9; j++) {
+          this.cells[(9 * j) + startCol].possibles[posIdx] -= 1;
+        }
+        this.currentValue = 0;
+      }
+    }
+    return false;
   }
 }
 
