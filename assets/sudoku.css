@@ -1,0 +1,118 @@
+
+body {
+  background-color: #F3ECE2;
+}
+
+#board {
+  margin: auto;
+  margin-top: 100px;
+  display: flex;
+  width: auto;
+  justify-content: center;
+}
+
+#grid {
+  margin-left: 20px;
+  width: 450px;
+  height: 450px;
+  border: 3px solid #64382B;
+  /* border-left: 3px solid #64382B; */
+  /* border-right: 3px solid #64382B; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  /* flex-wrap: wrap; */
+  box-sizing: border-box;
+}
+
+.sudoku-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  border: 1px solid #64382B;
+  box-sizing: border-box;
+}
+
+.sudoku-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  /* width: 50px;
+  height: 50px; */
+  border: 1px solid #64382B;
+  box-sizing: border-box;
+  color: #64382B;
+  font-size: 40px;
+  cursor: pointer;
+  vertical-align: center;
+}
+
+.sudoku-box:nth-of-type(3n - 1) {
+  border-left: 1.5px solid #64382B;
+  border-right: 1.5px solid #64382B;
+}
+
+.sudoku-box:nth-of-type(3n - 2) {
+  border-left: 1.5px solid #64382B;
+  border-right: 1.5px solid #64382B;
+}
+.sudoku-box:nth-of-type(3n) {
+
+  border-left: 1.5px solid #64382B;
+  border-right: 1.5px solid #64382B;
+}
+
+.sudoku-cell:nth-of-type(3n) {
+  border-right: 0;
+}
+
+.sudoku-cell:nth-of-type(3n + 1) {
+  border-left: 0;
+}
+
+.sudoku-cell-possibilities {
+  position: absolute;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  z-index: 10;
+  font-size: 13px;
+}
+
+.selected {
+  background-color: #b49274;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+#number-panel {
+  display: grid;
+  margin-left: 20px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  border: 1px solid #64382B;
+  height: 450px;
+  box-sizing: border-box;
+}
+
+.number-button {
+  border: 2px solid #64382B;
+  border-bottom: 0;
+  color: #64382B;
+  width: 45px;
+  font-size: 35px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.number-button:last-of-type {
+  border-bottom: 2px solid #64382B;
+}
