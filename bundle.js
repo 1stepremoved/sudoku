@@ -223,6 +223,7 @@ class SudokuBoard {
     this.render = this.render.bind(this);
     this.populate = this.populate.bind(this);
     this.populateBoard = this.populateBoard.bind(this);
+    this.changeNeighborsPos = this.changeNeighborsPos.bind(this);
 
 
     this.populateBoard();
@@ -286,40 +287,32 @@ class SudokuBoard {
       if (cell.possibles[posIdx]) {
         continue;
       }
+
       cell.currentValue = posIdx + 1;
-
-      // change neigbhors possibles
-      for (let j = 0, boxLen = cell.box.cells.length; j < boxLen; j++) {
-        cell.box.cells[j].possibles[posIdx] += 1;
-      }
-      let startRow = Math.floor(cellIdx / 9) * 9;
-      for (let j = 0; j < 9; j++) {
-        // debugger
-        this.cells[startRow + j].possibles[posIdx] += 1;
-      }
-      let startCol = Math.floor(cellIdx % 9);
-      for (let j = 0; j < 9; j++) {
-        this.cells[(9 * j) + startCol].possibles[posIdx] += 1;
-      }
-
+      this.changeNeighborsPos(cellIdx, posIdx, 1);
 
       if (this.populate(cellIdx + 1)) {
         return true;
       } else {
-        // change neighbors possibles
-        for (let j = 0, boxLen = cell.box.cells.length; j < boxLen; j++) {
-          cell.box.cells[j].possibles[posIdx] -= 1;
-        }
-        for (let j = 0; j < 9; j++) {
-          this.cells[startRow + j].possibles[posIdx] -= 1;
-        }
-        for (let j = 0; j < 9; j++) {
-          this.cells[(9 * j) + startCol].possibles[posIdx] -= 1;
-        }
+        this.changeNeighborsPos(cellIdx, posIdx, -1);
         this.currentValue = 0;
       }
     }
     return false;
+  }
+
+  changeNeighborsPos (cellIdx, posIdx, step) {
+    for (let j = 0, boxLen = this.cells[cellIdx].box.cells.length; j < boxLen; j++) {
+      this.cells[cellIdx].box.cells[j].possibles[posIdx] += step;
+    }
+    let startRow = Math.floor(cellIdx / 9) * 9;
+    for (let j = 0; j < 9; j++) {
+      this.cells[startRow + j].possibles[posIdx] += step;
+    }
+    let startCol = Math.floor(cellIdx % 9);
+    for (let j = 0; j < 9; j++) {
+      this.cells[(9 * j) + startCol].possibles[posIdx] += step;
+    }
   }
 }
 
