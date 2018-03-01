@@ -243,6 +243,7 @@ class SudokuBoard {
     this.populate = this.populate.bind(this);
     this.populateBoard = this.populateBoard.bind(this);
     this.changeNeighborsPos = this.changeNeighborsPos.bind(this);
+    this.changeNeighborsPosStep = this.changeNeighborsPosStep.bind(this);
     this.solve = this.solve.bind(this);
     this.solveCycle = this.solveCycle.bind(this);
     this.resolveAmbiguity = this.resolveAmbiguity.bind(this);
@@ -277,7 +278,7 @@ class SudokuBoard {
 
   populateBoard() {
     for (let i = 0, len = this.cells.length; i < len; i++) {
-      this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+      this.cells[i].possibles = [0,0,0,0,0,0,0,0,0];
     }
     while (true) {
       if (this.populate(0)){
@@ -303,7 +304,6 @@ class SudokuBoard {
     for (let i = 0, len = indii.length; i < len; i++) {
       indii[i] = i;
     }
-    let pos1, pos2, temp;
     indii = shuffle(indii);
     for (let i = 0, len = cell.possibles.length; i < len; i++) {
       let posIdx = indii[i];
@@ -312,12 +312,12 @@ class SudokuBoard {
       }
 
       cell.currentValue = posIdx + 1;
-      this.changeNeighborsPos(cellIdx, posIdx, true);
+      this.changeNeighborsPosStep(cellIdx, posIdx, 1);
 
       if (this.populate(cellIdx + 1)) {
         return true;
       } else {
-        this.changeNeighborsPos(cellIdx, posIdx, false);
+        this.changeNeighborsPosStep(cellIdx, posIdx, -1);
         this.currentValue = 0;
       }
     }
@@ -348,6 +348,20 @@ class SudokuBoard {
     let startCol = Math.floor(cellIdx % 9);
     for (let j = 0; j < 9; j++) {
       this.cells[(9 * j) + startCol].possibles[posIdx] = value;
+    }
+  }
+
+  changeNeighborsPosStep(cellIdx, posIdx, step) {
+    for (let j = 0, boxLen = this.cells[cellIdx].box.cells.length; j < boxLen; j++) {
+      this.cells[cellIdx].box.cells[j].possibles[posIdx] += step;
+    }
+    let startRow = Math.floor(cellIdx / 9) * 9;
+    for (let j = 0; j < 9; j++) {
+      this.cells[startRow + j].possibles[posIdx] += step;
+    }
+    let startCol = Math.floor(cellIdx % 9);
+    for (let j = 0; j < 9; j++) {
+      this.cells[(9 * j) + startCol].possibles[posIdx] += step;
     }
   }
 
