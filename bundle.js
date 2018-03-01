@@ -358,6 +358,7 @@ class SudokuBoard {
     for (let i = 0, len = this.cells.length; i < len; i++) {
       if (this.cells[i].currentValue > 0) {
         this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+        this.cells[i].isGiven = true;
         this.changeNeighborsPos(i, this.cells[i].currentValue - 1, false);
       }
     }
@@ -471,6 +472,10 @@ class SudokuBox {
     this.idx = idx;
     this.cells = [];
     this.box = null;
+  }
+
+  checkForSolutions() {
+    //a function that will get all missing nums, and insert them if they can only be put in one place
   }
 }
 
