@@ -149,6 +149,13 @@ document.addEventListener("DOMContentLoaded", ()=> {
   });
 
   window.board = new __WEBPACK_IMPORTED_MODULE_0__sudoku__["a" /* default */]();
+  board.depopulate(50);
+  board.render();
+  board.setCellPossibilities();
+  window.unsolvedGrid = new Array(board.cells.length);
+  for (let i = 0, len = unsolvedGrid.length; i < len; i++) {
+    unsolvedGrid[i] = board.cells[i].currentValue;
+  }
 });
 
 const setupSudoku = () => {
@@ -457,6 +464,7 @@ class SudokuBoard {
     let newState = state.slice();
     let possiblesIdx;
     let foundValue = true;
+    let solutions;
     while (foundValue) {
       foundValue = false;
       for (let i = 0, len = this.cells.length; i < len; i++) {
@@ -467,6 +475,14 @@ class SudokuBoard {
         if (possiblesIdx.length === 1) {
           this.cells[i].currentValue = possiblesIdx[0] + 1;
           this.changeNeighborsPos(i, possiblesIdx[0], false);
+          foundValue = true;
+        }
+      }
+      for (let i = 0, len = this.boxes.length; i <len; i++) {
+        solutions = this.boxes[i].checkForSolutions();
+        for (let j = 0, solsLen = solutions.length; j < solsLen; j++) {
+          solutions[j][0].currentValue = solutions[j][1];
+          this.changeNeighborsPos(solutions[j][0].idx, solutions[j][1] - 1, false);
           foundValue = true;
         }
       }
@@ -489,6 +505,36 @@ class SudokuBox {
   }
 
   checkForSolutions() {
+    let nums = [0,0,0,0,0,0,0,0,0];
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      if (this.cells[i].currentValue > 0) {
+        nums[this.cells[i].currentValue - 1] = 1;
+      }
+    }
+    let blanks = [];
+    for (let i = 0, len = nums.length; i < len; i++) {
+      if (!nums[i]){
+        blanks.push(i);
+      }
+    }
+    let solutions = [];
+    let cell;
+    for (let i = 0, len = blanks.length; i < len; i++) {
+      cell = null;
+      for (let j = 0, cellsLen = this.cells.length; j < cellsLen; j++) {
+        if (this.cells[j].possibles[i]) {
+          if (cell !== null) {
+            cell = -1;
+            break;
+          }
+          cell = this.cells[j];
+        }
+      }
+      if (cell !== -1 && cell !== null) {
+        solutions.push([cell, blanks[i] + 1]);
+      }
+    }
+    return solutions;
     //a function that will get all missing nums, and insert them if they can only be put in one place
   }
 }
