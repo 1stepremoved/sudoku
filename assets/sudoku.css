@@ -83,6 +83,10 @@ body {
 }
 
 .selected {
+  background-color: #a48264;
+}
+
+.selected.given {
   background-color: #b49274;
 }
 
@@ -92,6 +96,10 @@ body {
 
 .hidden {
   visibility: hidden;
+}
+
+.given {
+  color: #555555;
 }
 
 #number-panel {

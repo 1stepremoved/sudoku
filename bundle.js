@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
     let num = parseInt(e.keyCode) - 48;
     let cell = board.cells[parseInt(selectedCell.attr("id"))];
     if (num >= 1 && num <= 9) {
+      if (cell.isGiven) {return;}
       if (e.shiftKey) {
         cell.value = 0;
         cell.valueVisible = false;
@@ -148,14 +149,7 @@ document.addEventListener("DOMContentLoaded", ()=> {
     }
   });
 
-  window.board = new __WEBPACK_IMPORTED_MODULE_0__sudoku__["a" /* default */]();
-  board.depopulate(50);
-  board.render();
-  board.setCellPossibilities();
-  window.unsolvedGrid = new Array(board.cells.length);
-  for (let i = 0, len = unsolvedGrid.length; i < len; i++) {
-    unsolvedGrid[i] = board.cells[i].currentValue;
-  }
+  const board = new __WEBPACK_IMPORTED_MODULE_0__sudoku__["a" /* default */]();
 });
 
 const setupSudoku = () => {
@@ -247,6 +241,7 @@ class SudokuBoard {
       this.boxes[boxIdx].cells.push(sudokuCell);
     }
     this.render = this.render.bind(this);
+    this.setup = this.setup.bind(this);
     this.populate = this.populate.bind(this);
     this.populateBoard = this.populateBoard.bind(this);
     this.changeNeighborsPos = this.changeNeighborsPos.bind(this);
@@ -258,9 +253,15 @@ class SudokuBoard {
     this.depopulate = this.depopulate.bind(this);
     this.setCellPossibilities = this.setCellPossibilities.bind(this);
 
-
     this.solvedGrid = this.populateBoard();
-    this.render();
+    this.depopulate(60);
+    this.setCellPossibilities();
+    let puzzle = new Array(this.cells.length);
+    for (let i = 0, len = puzzle.length; i < len; i++) {
+      puzzle[i] = this.cells[i].currentValue;
+    }
+    puzzle = this.solve(puzzle);
+    this.setup(puzzle);
   }
 
   render() {
@@ -281,6 +282,18 @@ class SudokuBoard {
         cell.children().addClass("visible");
       }
     }
+  }
+
+  setup(puzzle) {
+    for (let i = 0, len = puzzle.length; i < len; i++) {
+      if (puzzle[i] > 0) {
+        this.cells[i].isGiven = true;
+        __WEBPACK_IMPORTED_MODULE_0_jquery___default()(`#${i}`).addClass("given");
+      }
+      this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+      this.cells[i].currentValue = puzzle[i];
+    }
+    this.render();
   }
 
   populateBoard() {
@@ -397,18 +410,15 @@ class SudokuBoard {
       unsolvedGrid[i] = this.cells[i].currentValue;
     }
     let grid = this.solveCycle(unsolvedGrid);
-    let cell, possibles;
+    let cell, givenCell, possibles;
     while (grid.includes(0)) {
-      debugger
       cell = this.getLeastAmbiguousCell();
       possibles = cell.getPossibles();
       while (possibles.length > 1) {
-        this.resolveAmbiguity(cell, possibles[0], Math.floor(Math.random() * 3));
+        givenCell = this.resolveAmbiguity(cell, possibles[0], Math.floor(Math.random() * 3));
+        unsolvedGrid[givenCell.idx] = possibles[0] + 1;
         possibles = cell.getPossibles();
       }
-      this.changeNeighborsPos(cell.idx, possibles[0], true);
-      unsolvedGrid[cell.idx] = possibles[0] + 1;
-      cell.currentValue = possibles[0] + 1;
 
       grid = this.solveCycle(grid);
     }
@@ -466,6 +476,8 @@ class SudokuBoard {
     }
     this.changeNeighborsPos(targetCell.idx, num, false);
     targetCell.currentValue = num + 1;
+    targetCell.possibles = [false,false,false,false,false,false,false,false,false];
+    return targetCell;
   }
 
   solveCycle(state) {
