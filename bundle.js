@@ -79,6 +79,9 @@ document.addEventListener("DOMContentLoaded", ()=> {
   let selectedButton = $(".number-button").first();
   let selectedId = parseInt(selectedCell.attr('id'));
   selectedCell.addClass("selected");
+
+  $(window).resize(gridProportions);
+
   $(".number-button").on("click", (e) => {
     selectedButton.removeClass("selected");
     selectedButton = $(e.currentTarget);
@@ -196,11 +199,18 @@ const setupSudoku = () => {
   }
   $("#board").append(numberPanel);
 
-  let side =  Math.floor(Math.min($(window).height() * 0.8, $(window).width() * 0.9));
-  side += (side % 9) + 1;
+  gridProportions();
+};
+
+function gridProportions() {
+  let side =  Math.max(Math.floor(Math.min($(window).height() * 0.8, $(window).width() * 0.9)), 400);
+  side += (side % 9) + 2;
   $("#grid").css({"height": side, "width": side});
   $("#number-panel").css({"height": side, "width": Math.floor(0.1 * side)});
-};
+  $(".sudoku-box").css({"font-size": Math.floor(side * 0.09)});
+  $(".sudoku-cell-possibility").css({"font-size": Math.floor(side * 0.03)});
+  $(".number-button").css({"font-size": Math.floor(side * 0.08)});
+}
 
 
 /***/ }),
