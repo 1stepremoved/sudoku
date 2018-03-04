@@ -75,7 +75,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 document.addEventListener("DOMContentLoaded", () => {
   const game = new SudokuGame();
-})
+});
 
 class SudokuGame {
   constructor() {
@@ -95,7 +95,7 @@ class SudokuGame {
     $(window).resize(this.gridProportions);
 
     document.addEventListener("dragstart",(e) => {
-      let target = isTargetInClass(e, "number-button");
+      let target = this.isTargetInClass(e, "number-button");
       if (target === null) {return;}
       let cell = this.board.cells[parseInt($(e.target).attr("id"))];
       this.selectedButton.removeClass("selected");
