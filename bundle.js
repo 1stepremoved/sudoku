@@ -197,6 +197,7 @@ const setupSudoku = () => {
   $("#board").append(numberPanel);
 
   let side =  Math.floor(Math.min($(window).height() * 0.8, $(window).width() * 0.9));
+  side += (side % 9) + 1;
   $("#grid").css({"height": side, "width": side});
   $("#number-panel").css({"height": side, "width": Math.floor(0.1 * side)});
 };
