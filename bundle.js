@@ -250,7 +250,7 @@ class SudokuGame {
 
   gridProportions() {
     let side =  Math.max(Math.floor(Math.min($(window).height() * 0.8, $(window).width() * 0.9)), 400);
-    side += (side % 9) + 2;
+    side -= (side % 9);
     $("#grid").css({"height": side, "width": side});
     $("#number-panel").css({"height": side, "width": Math.floor(0.1 * side)});
     $(".sudoku-box").css({"font-size": Math.floor(side * 0.09)});
