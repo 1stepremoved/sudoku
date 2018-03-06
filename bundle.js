@@ -79,7 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 class SudokuGame {
   constructor() {
-    this.setupSudoku = this.setupSudoku.bind(this);
+    this.setUpSudoku = this.setUpSudoku.bind(this);
+    this.setUpGrid = this.setUpGrid.bind(this);
+    this.setUpNumberPanel = this.setUpNumberPanel.bind(this);
     this.gridProportions = this.gridProportions.bind(this);
     this.isTargetInClass = this.isTargetInClass.bind(this);
     this.dragOver = this.dragOver.bind(this);
@@ -88,7 +90,7 @@ class SudokuGame {
     this.drop = this.drop.bind(this);
 
 
-    this.setupSudoku();
+    this.setUpSudoku();
     this.selectedCell = $(".sudoku-cell").first();
     this.selectedButton = $(".number-button").first();
     this.selectedId = parseInt(this.selectedCell.attr('id'));
@@ -200,8 +202,15 @@ class SudokuGame {
 
   }
 
-  setupSudoku() {
-    $("#board").children().remove();
+  setUpSudoku() {
+    this.setUpGrid();
+
+    this.setUpNumberPanel();
+
+    this.gridProportions();
+  }
+
+  setUpGrid() {$("#board").children().remove();
     let grid = $(document.createElement("div"));
     grid.attr("id", "grid");
     for (let i = 0; i < 9; i++) {
@@ -228,7 +237,9 @@ class SudokuGame {
       grid.append(box);
     }
     $("#board").append(grid);
+  }
 
+  setUpNumberPanel() {
     let numberPanel = $(document.createElement("div"));
     numberPanel.attr("id", "number-panel");
     let number;
@@ -244,8 +255,6 @@ class SudokuGame {
       numberPanel.append(number);
     }
     $("#board").append(numberPanel);
-
-    this.gridProportions();
   }
 
   gridProportions() {
