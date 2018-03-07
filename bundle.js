@@ -82,6 +82,7 @@ class SudokuGame {
     this.setUpSudoku = this.setUpSudoku.bind(this);
     this.setUpGrid = this.setUpGrid.bind(this);
     this.setUpNumberPanel = this.setUpNumberPanel.bind(this);
+    this.setUpOptionsPanel = this.setUpOptionsPanel.bind(this);
     this.gridProportions = this.gridProportions.bind(this);
     this.isTargetInClass = this.isTargetInClass.bind(this);
     this.dragOver = this.dragOver.bind(this);
@@ -203,14 +204,17 @@ class SudokuGame {
   }
 
   setUpSudoku() {
+    $("#board").children().remove();
+    let gameSpace = $(document.createElement("main"));
+    gameSpace.attr("id", "game-space");
+    $("#board").append(gameSpace);
     this.setUpGrid();
-
     this.setUpNumberPanel();
-
+    this.setUpOptionsPanel();
     this.gridProportions();
   }
 
-  setUpGrid() {$("#board").children().remove();
+  setUpGrid() {
     let grid = $(document.createElement("div"));
     grid.attr("id", "grid");
     for (let i = 0; i < 9; i++) {
@@ -236,7 +240,7 @@ class SudokuGame {
       box.addClass("sudoku-box");
       grid.append(box);
     }
-    $("#board").append(grid);
+    $("#game-space").append(grid);
   }
 
   setUpNumberPanel() {
@@ -254,7 +258,7 @@ class SudokuGame {
       }
       numberPanel.append(number);
     }
-    $("#board").append(numberPanel);
+    $("#game-space").append(numberPanel);
   }
 
   gridProportions() {
@@ -265,6 +269,36 @@ class SudokuGame {
     $(".sudoku-box").css({"font-size": Math.floor(side * 0.09)});
     $(".sudoku-cell-possibility").css({"font-size": Math.floor(side * 0.03)});
     $(".number-button").css({"font-size": Math.floor(side * 0.08)});
+    $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 32) / 4)});
+    // $("#options-panel").css({"margin-left": $("#grid").offset()["left"]});
+  }
+
+  setUpOptionsPanel() {
+    let optionsPanel = $(document.createElement("div"));
+    optionsPanel.attr("id", "options-panel");
+    let option = $(document.createElement("div"));
+    option.addClass("option-button");
+    option.attr("id", "new-puzzle-button");
+    option.html("New");
+    option.on("click", () => {this.board.clear(true);this.board.makeGame();});
+    optionsPanel.append(option);
+    option = $(document.createElement("div"));
+    option.addClass("option-button");
+    option.attr("id", "clear-button");
+    option.html("Clear");
+    option.on("click", () => (this.board.clear(false)));
+    optionsPanel.append(option);
+    option = $(document.createElement("div"));
+    option.addClass("option-button");
+    option.attr("id", "hint-button");
+    option.html("Hint");
+    optionsPanel.append(option);
+    option = $(document.createElement("div"));
+    option.addClass("option-button");
+    option.attr("id", "check-submit-button");
+    option.html("Check");
+    optionsPanel.append(option);
+    $("#board").append(optionsPanel);
   }
 
   isTargetInClass(e, className) {
@@ -324,16 +358,13 @@ class SudokuGame {
 // import $ from 'jquery';
 
 function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+  let currentIndex = array.length, temporaryValue, randomIndex;
 
-  // While there remain elements to shuffle...
   while (0 !== currentIndex) {
 
-    // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
 
-    // And swap it with the current element.
     temporaryValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
@@ -369,16 +400,10 @@ class SudokuBoard {
     this.getLeastAmbiguousCell = this.getLeastAmbiguousCell.bind(this);
     this.depopulate = this.depopulate.bind(this);
     this.setCellPossibilities = this.setCellPossibilities.bind(this);
+    this.makeGame = this.makeGame.bind(this);
+    this.clear = this.clear.bind(this);
 
-    this.solvedGrid = this.populateBoard();
-    this.depopulate(60);
-    this.setCellPossibilities();
-    let puzzle = new Array(this.cells.length);
-    for (let i = 0, len = puzzle.length; i < len; i++) {
-      puzzle[i] = this.cells[i].currentValue;
-    }
-    puzzle = this.solve(puzzle);
-    this.setup(puzzle);
+    this.makeGame();
   }
 
   render() {
@@ -399,6 +424,31 @@ class SudokuBoard {
         cell.children().addClass("visible");
       }
     }
+  }
+
+  makeGame(){
+    this.solvedGrid = this.populateBoard();
+    this.depopulate(60);
+    this.setCellPossibilities();
+    let puzzle = new Array(this.cells.length);
+    for (let i = 0, len = puzzle.length; i < len; i++) {
+      puzzle[i] = this.cells[i].currentValue;
+    }
+    puzzle = this.solve(puzzle);
+    this.setup(puzzle);
+  }
+
+  clear(givens) {
+    for (let i = 0, len = this.cells.length; i <len; i++) {
+      if (givens || !this.cells[i].isGiven) {
+        this.cells[i].currentValue = 0;
+        this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+        this.cells[i].isGiven = false;
+        this.cells[i].inConflict = false;
+        $(`#${i}`).removeClass("given");
+      }
+    }
+    this.render();
   }
 
   setup(puzzle) {

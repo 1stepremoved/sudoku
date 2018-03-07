@@ -7,9 +7,48 @@ body {
   margin: auto;
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
   width: auto;
   justify-content: center;
 }
+
+#game-space {
+  margin: auto;
+  display: flex;
+  width: auto;
+  justify-content: center;
+}
+
+#options-panel {
+  margin: auto;
+  margin-top: 10px;
+  display: flex;
+  padding-left: 20px;
+  color: #64382B;
+}
+
+.option-button {
+  padding: 10px 0px;
+  text-align: center;
+  border: 1px solid #64382B;
+  border-left: 0;
+  /* margin: 0px 5px; */
+}
+
+.option-button:first-of-type {
+  border: 1px solid #64382B;
+}
+
+.option-button:hover {
+  background-color: #a48264;
+  color: #64382B;
+}
+
+.option-button:active {
+  background-color: #64382B;
+  color: #F3ECE2;
+}
+
 
 #grid {
   margin-left: 20px;
