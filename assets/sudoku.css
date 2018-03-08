@@ -122,11 +122,11 @@ body {
 }
 
 .selected {
-  background-color: #a48264;
+  background-color: #a48264 !important;
 }
 
 .selected.given {
-  background-color: #b49274;
+  background-color: #b49274 !important;
 }
 
 .visible {
@@ -138,7 +138,7 @@ body {
 }
 
 .given {
-  color: #555555;
+  color: #555555 !important;
 }
 
 #number-panel {
@@ -169,4 +169,13 @@ body {
   color: #64382B;
   z-index: 100;
   position: absolute;
+}
+
+.direct-error {
+  background-color:  #cc0000;
+  color: black;
+}
+
+.indirect-error {
+  background-color: #cc7777;
 }
