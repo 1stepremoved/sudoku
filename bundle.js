@@ -296,6 +296,7 @@ class SudokuGame {
     option.attr("id", "hint-button");
     option.html("HINT");
     optionsPanel.append(option);
+    option.on("click", () => (this.board.hint()));
     option = $(document.createElement("div"));
     option.addClass("option-button");
     option.attr("id", "check-submit-button");
@@ -411,7 +412,9 @@ class SudokuBoard {
     this.checkRowsForErrors = this.checkRowsForErrors.bind(this);
     this.checkColsForErrors = this.checkColsForErrors.bind(this);
     this.clearErrors = this.clearErrors.bind(this);
+    this.hint = this.hint.bind(this);
 
+    this.gaveHint = false;
     this.makeGame();
   }
 
@@ -445,6 +448,22 @@ class SudokuBoard {
     }
     puzzle = this.solve(puzzle);
     this.setup(puzzle);
+  }
+
+  hint() {
+    const blanks = [];
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      if (!this.cells[i].isGiven && this.cells[i].currentValue === 0) {
+        blanks.push(i);
+      }
+    }
+    if (blanks.length === 0) {return;}
+    this.gaveHint = true;
+    const idx = blanks[Math.floor(Math.random() * blanks.length)];
+    this.cells[idx].currentValue = this.solvedGrid[idx];
+    this.cells[idx].isGiven = true;
+    $(`#${idx}`).addClass("given");
+    this.render();
   }
 
   clear(givens) {
