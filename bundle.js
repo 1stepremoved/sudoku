@@ -275,7 +275,7 @@ class SudokuGame {
     $(".sudoku-box").css({"font-size": Math.floor(side * 0.09)});
     $(".sudoku-cell-possibility").css({"font-size": Math.floor(side * 0.03)});
     $(".number-button").css({"font-size": Math.floor(side * 0.08)});
-    $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 32) / 4)});
+    $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 42) / 4)});
     // $("#options-panel").css({"margin-left": $("#grid").offset()["left"]});
   }
 
