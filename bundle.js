@@ -109,6 +109,9 @@ class SudokuGame {
       cell.valueVisible = true;
       cell.possibles = [false,false,false,false,false,false,false,false,false];
       cell.currentValue = num;
+      if (parseInt(this.selectedButton.attr("val")) === 0 && this.selectedCell.hasClass("direct-error")) {
+        this.board.checkForErrors();
+      }
       this.board.render();
     });
 
@@ -347,6 +350,9 @@ class SudokuGame {
       cell.valueVisible = true;
       cell.possibles = [false,false,false,false,false,false,false,false,false];
       cell.currentValue = num;
+      if (num === 0 && target.hasClass("direct-error")) {
+        this.board.checkForErrors();
+      }
       this.board.render();
     }
     this.selectedCell = target;
