@@ -25,18 +25,21 @@ body {
   display: flex;
   padding-left: 20px;
   color: #64382B;
+  font-weight: bold;
+  font-family: arial;
 }
 
 .option-button {
   padding: 10px 0px;
   text-align: center;
-  border: 1px solid #64382B;
+  border: 3px solid #64382B;
   border-left: 0;
+  box-sizing: border-box;
   /* margin: 0px 5px; */
 }
 
 .option-button:first-of-type {
-  border: 1px solid #64382B;
+  border: 3px solid #64382B;
 }
 
 .option-button:hover {
