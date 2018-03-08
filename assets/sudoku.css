@@ -144,6 +144,7 @@ body {
 #number-panel {
   display: grid;
   margin-left: 20px;
+  margin-right: 20px;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   border: 1px solid #64382B;
   box-sizing: border-box;
