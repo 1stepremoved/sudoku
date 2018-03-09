@@ -316,8 +316,20 @@ class SudokuGame {
     option.addClass("option-button");
     option.attr("id", "check-submit-button");
     option.html("CHECK");
-    option.on("click", () => (this.board.checkForErrors()));
-    option.on("touchend", () => (this.board.checkForErrors()));
+    option.on("click", () => {
+      if (this.board.checkForErrors() && this.board.isFull()) {
+        for (let i = 0, len = this.board.cells.length; i < len; i++) {
+          $(`#${i}`).addClass("solved");
+        }
+      }
+    });
+    option.on("touchend", () => {
+      if (this.board.checkForErrors() && this.board.isFull()) {
+        for (let i = 0, len = this.board.cells.length; i < len; i++) {
+          $(`#${i}`).addClass("solved");
+        }
+      }
+    });
     optionsPanel.append(option);
     $("#board").append(optionsPanel);
   }
@@ -484,6 +496,24 @@ class SudokuBoard {
     this.render();
   }
 
+  isFull() {
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      if (!this.cells[i].isGiven && this.cells[i].currentValue === 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isSolved() {
+    for (let i = 0, len = this.cells.length; i < len; i++) {
+      if (this.cells[i].currentValue !== this.solvedGrid[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   clear(givens) {
     this.clearErrors();
     for (let i = 0, len = this.cells.length; i <len; i++) {
@@ -519,7 +549,7 @@ class SudokuBoard {
       }
     }
 
-    if (boxes.length === 0 && rows.length === 0 && cols.lengh === 0) {
+    if (boxes.length === 0 && rows.length === 0 && cols.length === 0) {
       return true;
     }
 
