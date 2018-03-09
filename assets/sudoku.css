@@ -41,11 +41,6 @@ body {
   border: 3px solid #64382B;
 }
 
-.option-button:hover {
-  background-color: #a48264;
-  color: #64382B;
-}
-
 .option-button:active {
   background-color: #64382B;
   color: #F3ECE2;
@@ -178,4 +173,9 @@ body {
 
 .indirect-error {
   background-color: #cc7777;
+}
+
+html.nontouch .option-button:hover {
+  background-color: #a48264;
+  color: #64382B;
 }
