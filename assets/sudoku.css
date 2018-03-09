@@ -179,7 +179,7 @@ body {
   background-color: #77dd77 !important;
 }
 
-html.nontouch .option-button:hover {
+html.non-touch .option-button:hover {
   background-color: #a48264;
   color: #64382B;
 }
