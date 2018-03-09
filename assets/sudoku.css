@@ -179,7 +179,8 @@ body {
 }
 
 .green-text {
-  color: #00cc00 !important;
+  color: #00bb00 !important;
+  transition: color 250ms ease;
 }
 
 html.non-touch .option-button:hover {
