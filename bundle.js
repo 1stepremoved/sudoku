@@ -324,9 +324,20 @@ class SudokuGame {
   }
 
   check() {
-    if (this.board.checkForErrors() && this.board.isFull()) {
-      for (let i = 0, len = this.board.cells.length; i < len; i++) {
-        $(`#${i}`).addClass("solved");
+    if (this.board.checkForErrors()) {
+      if (this.board.isFull()) {
+        for (let i = 0, len = this.board.cells.length; i < len; i++) {
+          $(`#${i}`).addClass("solved");
+        }
+      } else {
+        $(".sudoku-cell").addClass("green-text");
+        $(".sudoku-box").addClass("green-text");
+        $("#grid").addClass("green-text");
+        setTimeout(() => {
+          $(".sudoku-cell").removeClass("green-text");
+          $(".sudoku-box").removeClass("green-text");
+          $("#grid").removeClass("green-text");
+        }, 250);
       }
     }
   }
@@ -499,7 +510,6 @@ class SudokuBoard {
         return false;
       }
     }
-    debugger
     return true;
   }
 
