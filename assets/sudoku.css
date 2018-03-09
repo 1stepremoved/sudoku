@@ -34,6 +34,7 @@ body {
   border: 3px solid #64382B;
   border-left: 0;
   box-sizing: border-box;
+  cursor: pointer;
   /* margin: 0px 5px; */
 }
 

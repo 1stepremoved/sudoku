@@ -93,6 +93,7 @@ class SudokuGame {
     this.dragEnter = this.dragOver.bind(this);
     this.dragLeave = this.dragOver.bind(this);
     this.drop = this.drop.bind(this);
+    this.check = this.check.bind(this);
 
 
     this.setUpSudoku();
@@ -316,22 +317,18 @@ class SudokuGame {
     option.addClass("option-button");
     option.attr("id", "check-submit-button");
     option.html("CHECK");
-    option.on("click", () => {
-      if (this.board.checkForErrors() && this.board.isFull()) {
-        for (let i = 0, len = this.board.cells.length; i < len; i++) {
-          $(`#${i}`).addClass("solved");
-        }
-      }
-    });
-    option.on("touchend", () => {
-      if (this.board.checkForErrors() && this.board.isFull()) {
-        for (let i = 0, len = this.board.cells.length; i < len; i++) {
-          $(`#${i}`).addClass("solved");
-        }
-      }
-    });
+    option.on("click", this.check);
+    option.on("touchend", this.check);
     optionsPanel.append(option);
     $("#board").append(optionsPanel);
+  }
+
+  check() {
+    if (this.board.checkForErrors() && this.board.isFull()) {
+      for (let i = 0, len = this.board.cells.length; i < len; i++) {
+        $(`#${i}`).addClass("solved");
+      }
+    }
   }
 
   isTargetInClass(e, className) {
@@ -502,6 +499,7 @@ class SudokuBoard {
         return false;
       }
     }
+    debugger
     return true;
   }
 
