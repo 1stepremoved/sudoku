@@ -270,7 +270,7 @@ class SudokuGame {
   gridProportions() {
     let side;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      side =  Math.max(Math.floor(Math.min(window.screen["availHeight"] * 0.8, window.screen["availWidth"] * 0.9)), 350);
+      side =  Math.max(Math.floor(Math.min(window.screen["availHeight"] * 0.8, window.screen["availWidth"] * 0.75)), 250);
     } else {
       side =  Math.max(Math.floor(Math.min($(window).height() * 0.8, $(window).width() * 0.9)), 350);
     }
