@@ -187,3 +187,9 @@ html.non-touch .option-button:hover {
   background-color: #a48264;
   color: #64382B;
 }
+
+#time-display {
+  padding-top: 300px;
+  text-align: center;
+  font-size: 30px;
+}

@@ -94,6 +94,7 @@ class SudokuGame {
     this.dragLeave = this.dragOver.bind(this);
     this.drop = this.drop.bind(this);
     this.check = this.check.bind(this);
+    this.newPuzzle = this.newPuzzle.bind(this);
 
 
     this.setUpSudoku();
@@ -304,8 +305,8 @@ class SudokuGame {
     option.addClass("option-button");
     option.attr("id", "new-puzzle-button");
     option.html("NEW");
-    option.on("click", () => {this.board.clear(true);this.board.makeGame();});
-    option.on("touchend", () => {this.board.clear(true);this.board.makeGame();});
+    option.on("click", this.newPuzzle);
+    option.on("touchend", this.newPuzzle);
     optionsPanel.append(option);
     option = $(document.createElement("div"));
     option.addClass("option-button");
@@ -331,6 +332,13 @@ class SudokuGame {
     $("#board").append(optionsPanel);
   }
 
+  newPuzzle() {
+    this.board.clear(true);
+    this.board.makeGame();
+    $("#time-display").remove();
+    window.scroll({"top": 0, "behavior": "smooth"});
+  }
+
   check() {
     if (this.board.checkForErrors()) {
       if (this.board.isFull()) {
@@ -338,6 +346,7 @@ class SudokuGame {
           $(`#${i}`).addClass("solved");
         }
         this.totalTime = Date.now() - this.board.startTime;
+        this.makeTimeDisplay();
       } else {
         $(".sudoku-cell").addClass("green-text");
         $(".sudoku-box").addClass("green-text");
@@ -349,6 +358,14 @@ class SudokuGame {
         }, 250);
       }
     }
+  }
+
+  makeTimeDisplay() {
+    let timeDisplay = $(document.createElement("div"));
+    timeDisplay.attr("id", "time-display");
+    timeDisplay.html(`Your time is ${this.totalTime}`);
+    $("#board").append(timeDisplay);
+    document.getElementById("time-display").scrollIntoView({"behavior": "smooth"});
   }
 
   isTargetInClass(e, className) {
@@ -541,6 +558,7 @@ class SudokuBoard {
         this.cells[i].isGiven = false;
         this.cells[i].inConflict = false;
         $(`#${i}`).removeClass("given");
+        $(`#${i}`).removeClass("solved");
       }
     }
     this.render();
