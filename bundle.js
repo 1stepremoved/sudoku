@@ -255,9 +255,9 @@ class SudokuGame {
   }
 
   setUpNumberPanel() {
-    if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-     return;
-    }
+    // if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    //  return;
+    // }
     let numberPanel = $(document.createElement("div"));
     numberPanel.attr("id", "number-panel");
     let number;
@@ -288,12 +288,12 @@ class SudokuGame {
     $(".sudoku-box").css({"font-size": Math.floor(side * 0.085)});
     $(".sudoku-cell-possibility").css({"font-size": Math.floor(side * 0.03)});
     $(".number-button").css({"font-size": Math.floor(side * 0.08)});
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    // if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
      $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 42) / 4)});
-   } else {
-     $("#options-panel").css({"padding-left": 20});
-     $(".option-button").css({"width": Math.floor((side + 10) / 4)});
-   }
+   // } else {
+   //   $("#options-panel").css({"padding-left": 20});
+   //   $(".option-button").css({"width": Math.floor((side + 10) / 4)});
+   // }
     // $("#options-panel").css({"margin-left": $("#grid").offset()["left"]});
   }
 
