@@ -255,6 +255,9 @@ class SudokuGame {
   }
 
   setUpNumberPanel() {
+    if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+     return;
+    }
     let numberPanel = $(document.createElement("div"));
     numberPanel.attr("id", "number-panel");
     let number;
@@ -285,7 +288,12 @@ class SudokuGame {
     $(".sudoku-box").css({"font-size": Math.floor(side * 0.085)});
     $(".sudoku-cell-possibility").css({"font-size": Math.floor(side * 0.03)});
     $(".number-button").css({"font-size": Math.floor(side * 0.08)});
-    $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 42) / 4)});
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+     $(".option-button").css({"width": Math.floor((side + Math.floor(side * 0.08) + 42) / 4)});
+   } else {
+     $("#options-panel").css({"padding-left": 20});
+     $(".option-button").css({"width": Math.floor((side + 10) / 4)});
+   }
     // $("#options-panel").css({"margin-left": $("#grid").offset()["left"]});
   }
 
@@ -329,6 +337,7 @@ class SudokuGame {
         for (let i = 0, len = this.board.cells.length; i < len; i++) {
           $(`#${i}`).addClass("solved");
         }
+        this.totalTime = Date.now() - this.board.startTime;
       } else {
         $(".sudoku-cell").addClass("green-text");
         $(".sudoku-box").addClass("green-text");
@@ -452,7 +461,6 @@ class SudokuBoard {
     this.clearErrors = this.clearErrors.bind(this);
     this.hint = this.hint.bind(this);
 
-    this.gaveHint = false;
     this.makeGame();
   }
 
@@ -477,6 +485,8 @@ class SudokuBoard {
   }
 
   makeGame(){
+    this.gaveHint = false;
+    this.startTime = Date.now();
     this.solvedGrid = this.populateBoard();
     this.depopulate(60);
     this.setCellPossibilities();
