@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyD-lXT3oeozpGvJTC9UFoQJs9yIqHkvzvI",
+        authDomain: "sudoku-5fa65.firebaseapp.com",
+        databaseURL: "https://sudoku-5fa65.firebaseio.com",
+        projectId: "sudoku-5fa65",
+        storageBucket: "",
+        messagingSenderId: "522544983614"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.js"></script>
     <script type="text/javascript" src="./bundle.js"></script>
     <link rel="stylesheet" href="./assets/sudoku.css">
