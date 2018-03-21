@@ -341,9 +341,43 @@ class SudokuGame {
     let puzzleIdLabel = $(document.createElement("div"));
     puzzleIdLabel.html("Puzzle ID:");
     puzzleIdLabel.attr("id","puzzle-id-label");
+    puzzleIdLabel.attr("data","original");
     puzzleIdForm.append(puzzleIdLabel);
+    puzzleIdLabel.on("click", () => {
+      if (puzzleIdLabel.attr("data") === "original") {
+        puzzleIdLabel.html("Copy");
+        puzzleIdInput.select();
+        document.execCommand("Copy");
+        document.getSelection().empty();
+      }
+    });
+    puzzleIdLabel.on("mouseenter", ()=> {
+      if (puzzleIdLabel.attr("data") === "original") {
+        puzzleIdLabel.html("Copy");
+      }
+    });
+    puzzleIdLabel.on("mouseleave", ()=> {
+      if (puzzleIdLabel.attr("data") === "original") {
+        puzzleIdLabel.html("Puzzle ID");
+      }
+    });
     let puzzleIdInput = $(document.createElement("input"));
     puzzleIdInput.attr("id","puzzle-id-input");
+    puzzleIdInput.attr("autocomplete","off");
+    puzzleIdInput.on("input", ()=> {
+      if (puzzleIdInput.val() !== this.board.uniqueId) {
+        puzzleIdLabel.attr("data","changed");
+        puzzleIdLabel.html("Go to puzzle");
+      }
+    });
+    puzzleIdInput.on("focusout", ()=> {
+      puzzleIdInput.val(this.board.uniqueId);
+      puzzleIdLabel.attr("data","original");
+      puzzleIdLabel.html("Puzzle ID:");
+    });
+    puzzleIdInput.on("focus", ()=> {
+      puzzleIdInput.select();
+    });
     puzzleIdForm.append(puzzleIdInput);
     $("#board").append(puzzleIdForm);
   }
