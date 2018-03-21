@@ -19,6 +19,45 @@ body {
   justify-content: center;
 }
 
+#puzzle-id-form {
+  margin: auto;
+  margin-top: 10px;
+  display: flex;
+  color: #64382B;
+  font-weight: bold;
+  font-family: arial;
+}
+
+#puzzle-id-label {
+  width: 100px;
+  text-align: center;
+  padding: 5px 10px;
+  border: 2px solid #64382B;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  cursor: pointer;
+}
+
+#puzzle-id-input {
+  /* padding-left: 5px; */
+  background-color: #F3ECE2;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  outline: none;
+  box-shadow: none;
+  margin: none;
+  border-style:solid;
+  border: 1px solid #64382B;
+  border-left: none;
+  padding-left: 5px;
+  text-overflow: ellipsis;
+}
+
+#puzzle-id-input:focus {
+  background-color: #FFFCF2;
+  color: #44180B;
+}
+
 #options-panel {
   margin: auto;
   margin-top: 10px;
@@ -42,7 +81,7 @@ body {
   border: 3px solid #64382B;
 }
 
-.option-button:active {
+.option-button:active, #puzzle-id-label:active {
   background-color: #64382B;
   color: #F3ECE2;
 }
