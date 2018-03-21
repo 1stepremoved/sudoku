@@ -429,7 +429,6 @@ class SudokuGame {
 // import $ from 'jquery';
 
 
-
 class SudokuBoard {
   constructor() {
     this.boxes = [];
@@ -480,6 +479,7 @@ class SudokuBoard {
         arr.push(String.fromCharCode(((this.solvedGrid[i] + offset) % 9) + 1 + 64));
       }
     }
+    __WEBPACK_IMPORTED_MODULE_0__util__["a" /* programaticShuffle */](arr);
     this.uniqueId = arr.join("");
   }
 
@@ -678,7 +678,7 @@ class SudokuBoard {
     for (let i = 0, len = indii.length; i < len; i++) {
       indii[i] = i;
     }
-    indii = __WEBPACK_IMPORTED_MODULE_0__util__["a" /* randShuffle */](indii);
+    indii = __WEBPACK_IMPORTED_MODULE_0__util__["b" /* randShuffle */](indii);
     for (let i = 0, len = cell.possibles.length; i < len; i++) {
       let posIdx = indii[i];
       if (cell.possibles[posIdx]) {
@@ -705,7 +705,7 @@ class SudokuBoard {
         idxs.push(i);
       }
     }
-    idxs = __WEBPACK_IMPORTED_MODULE_0__util__["a" /* randShuffle */](idxs);
+    idxs = __WEBPACK_IMPORTED_MODULE_0__util__["b" /* randShuffle */](idxs);
     for (let i = 0, len = Math.min(num, this.cells.length); i < len; i++) {
       this.cells[idxs.pop()].currentValue = 0;
     }
@@ -1012,7 +1012,7 @@ const randShuffle = (array) => {
 
   return array;
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = randShuffle;
+/* harmony export (immutable) */ __webpack_exports__["b"] = randShuffle;
 
 
 const programaticShuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
@@ -1022,7 +1022,7 @@ const programaticShuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
   programaticShuffle(arr, sidx, mid);
   programaticShuffle(arr, mid + 1, eidx);
 };
-/* unused harmony export programaticShuffle */
+/* harmony export (immutable) */ __webpack_exports__["a"] = programaticShuffle;
 
 
 
