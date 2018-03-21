@@ -425,23 +425,10 @@ class SudokuGame {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(2);
 // import $ from 'jquery';
 
-function shuffle(array) {
-  let currentIndex = array.length, temporaryValue, randomIndex;
 
-  while (0 !== currentIndex) {
-
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-}
 
 class SudokuBoard {
   constructor() {
@@ -483,13 +470,14 @@ class SudokuBoard {
   }
 
   getUniqueId() {
+    let offset = this.cells.reduce((acc, el) => {return acc + el.currentValue;},0) % 9;
     let arr = [];
     for (let i = 0, len = this.cells.length; i < len; i++) {
       if (this.cells[i].isGiven) {
-        arr.push(this.cells[i].currentValue);
+        arr.push(((this.cells[i].currentValue + offset) % 9) + 1);
       }
       else {
-        arr.push(String.fromCharCode(this.solvedGrid[i] + 64));
+        arr.push(String.fromCharCode(((this.solvedGrid[i] + offset) % 9) + 1 + 64));
       }
     }
     this.uniqueId = arr.join("");
@@ -528,6 +516,7 @@ class SudokuBoard {
     puzzle = this.solve(puzzle);
     this.setup(puzzle);
     this.getUniqueId();
+    console.log(this.uniqueId);
   }
 
   hint() {
@@ -689,7 +678,7 @@ class SudokuBoard {
     for (let i = 0, len = indii.length; i < len; i++) {
       indii[i] = i;
     }
-    indii = shuffle(indii);
+    indii = __WEBPACK_IMPORTED_MODULE_0__util__["a" /* randShuffle */](indii);
     for (let i = 0, len = cell.possibles.length; i < len; i++) {
       let posIdx = indii[i];
       if (cell.possibles[posIdx]) {
@@ -716,7 +705,7 @@ class SudokuBoard {
         idxs.push(i);
       }
     }
-    idxs = shuffle(idxs);
+    idxs = __WEBPACK_IMPORTED_MODULE_0__util__["a" /* randShuffle */](idxs);
     for (let i = 0, len = Math.min(num, this.cells.length); i < len; i++) {
       this.cells[idxs.pop()].currentValue = 0;
     }
@@ -1001,6 +990,98 @@ class SudokuCell {
 
 
 /* harmony default export */ __webpack_exports__["a"] = (SudokuBoard);
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const randShuffle = (array) => {
+  let currentIndex = array.length, temporaryValue, randomIndex;
+
+  while (0 !== currentIndex) {
+
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = randShuffle;
+
+
+const programaticShuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
+  if (sidx >= eidx) return;
+  let mid = Math.floor((sidx + eidx) / 2);
+  shuffleHelper(arr, sidx, eidx);
+  programaticShuffle(arr, sidx, mid);
+  programaticShuffle(arr, mid + 1, eidx);
+};
+/* unused harmony export programaticShuffle */
+
+
+
+const shuffleHelper = (arr,sidx, eidx) => {
+  let mid = Math.floor((sidx + eidx) / 2);
+  let base, midHolder;
+  if ((eidx - sidx) % 2 === 0) {
+    base = mid;
+    midHolder = arr[mid];
+  } else {
+    base = mid + 1;
+    midHolder = null;
+  }
+  let count = 0;
+  let c;
+  while (sidx + count < base) {
+    c = arr[mid + 1 + count];
+    arr[base + count] = arr[sidx + count];
+    arr[sidx + count] = c;
+    count += 1;
+  }
+  if (midHolder) arr[eidx] = midHolder;
+ };
+/* unused harmony export shuffleHelper */
+
+
+const programaticDeshuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
+  if (sidx >= eidx) return;
+  let mid = Math.floor((sidx + eidx) / 2);
+  programaticDeshuffle(arr, sidx, mid);
+  programaticDeshuffle(arr, mid + 1, eidx);
+  deshuffleHelper(arr, sidx, eidx);
+};
+/* unused harmony export programaticDeshuffle */
+
+
+const deshuffleHelper = (arr,sidx, eidx) => {
+  let mid = Math.floor((sidx + eidx) / 2);
+  let base, midHolder;
+  if ((eidx - sidx) % 2 === 0) {
+    base = 1;
+    midHolder = arr[mid];
+  } else {
+    base = 0;
+    midHolder = null;
+  }
+    let count = 0;
+  let c, l;
+  while (sidx + base + count <= mid) {
+    c = arr[mid + 1 + count];
+    arr[mid + 1 + count] = l ? l : arr[sidx + count];
+    if (midHolder) l = arr[sidx + count + base];
+    arr[sidx + count + base] = c;
+    count += 1;
+  }
+  if (midHolder) arr[sidx] = midHolder;
+};
+/* unused harmony export deshuffleHelper */
+
 
 
 /***/ })
