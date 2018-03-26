@@ -343,12 +343,14 @@ class SudokuGame {
     puzzleIdLabel.attr("id","puzzle-id-label");
     puzzleIdLabel.attr("data","original");
     puzzleIdForm.append(puzzleIdLabel);
-    puzzleIdLabel.on("click", () => {
+    puzzleIdLabel.on("click", (e) => {
       if (puzzleIdLabel.attr("data") === "original") {
         puzzleIdLabel.html("Copy");
         puzzleIdInput.select();
         document.execCommand("Copy");
         document.getSelection().empty();
+      } else {
+        puzzleIdForm.submit();
       }
     });
     puzzleIdLabel.on("mouseenter", ()=> {
@@ -370,13 +372,27 @@ class SudokuGame {
         puzzleIdLabel.html("Go to puzzle");
       }
     });
+    const that = this;
     puzzleIdInput.on("focusout", ()=> {
-      puzzleIdInput.val(this.board.uniqueId);
-      puzzleIdLabel.attr("data","original");
-      puzzleIdLabel.html("Puzzle ID:");
+      if (puzzleIdInput.val() === "" || puzzleIdInput.val() === this.board.uniqueId) {
+        puzzleIdInput.val(this.board.uniqueId);
+        puzzleIdLabel.attr("data","original");
+        puzzleIdLabel.html("Puzzle ID:");
+      }
     });
     puzzleIdInput.on("focus", ()=> {
       puzzleIdInput.select();
+    });
+    puzzleIdForm.on("submit",(e) => {
+      e.preventDefault();
+      if ($("#puzzle-id-input").val().length === 81) {
+        this.board.clear(true);
+        this.board.makeGameFromKey($("#puzzle-id-input").val());
+        $("#time-display").remove();
+        window.scroll({"top": 0, "behavior": "smooth"});
+        puzzleIdLabel.attr("data","original");
+        puzzleIdLabel.html("Puzzle ID");
+      }
     });
     puzzleIdForm.append(puzzleIdInput);
     $("#board").append(puzzleIdForm);
@@ -519,17 +535,18 @@ class SudokuBoard {
   }
 
   getUniqueId() {
-    let offset = this.cells.reduce((acc, el) => {return acc + el.currentValue;},0) % 9;
+    // let offset = this.cells.reduce((acc, el) => {return acc + el.currentValue;},0) % 9;
     let arr = [];
     for (let i = 0, len = this.cells.length; i < len; i++) {
+      // arr.push(this.solvedGrid[i]);
       if (this.cells[i].isGiven) {
-        arr.push(((this.cells[i].currentValue + offset) % 9) + 1);
+        arr.push(this.cells[i].currentValue);
       }
       else {
-        arr.push(String.fromCharCode(((this.solvedGrid[i] + offset) % 9) + 1 + 64));
+        arr.push(String.fromCharCode(this.solvedGrid[i] + 64));
       }
     }
-    __WEBPACK_IMPORTED_MODULE_0__util__["a" /* programaticShuffle */](arr);
+    __WEBPACK_IMPORTED_MODULE_0__util__["b" /* programmaticShuffle */](arr);
     this.uniqueId = arr.join("");
   }
 
@@ -551,6 +568,30 @@ class SudokuBoard {
         cell.children().addClass("visible");
       }
     }
+  }
+
+  makeGameFromKey(shuffledKey) {
+    this.gaveHint = false;
+    this.startTime = Date.now();
+    this.uniqueId = shuffledKey;
+    let key = shuffledKey.split("");
+    __WEBPACK_IMPORTED_MODULE_0__util__["a" /* programmaticDeshuffle */](key);
+    this.solvedGrid = key.map(el => {
+      return parseInt(el) ? el : el.charCodeAt(0) - 64;
+    });
+    for (let i = 0, len = key.length; i < len; i++) {
+      if (parseInt(key[i])) {
+        this.cells[i].currentValue = parseInt(key[i]);
+        this.cells[i].isGiven = true;
+        $(`#${i}`).addClass("given");
+      } else {
+        this.cells[i].currentValue = 0;
+        this.cells[i].isGiven = false;
+        $(`#${i}`).removeClass("given");
+      }
+      this.cells[i].possibles = [false,false,false,false,false,false,false,false,false];
+    }
+    this.render();
   }
 
   makeGame(){
@@ -728,7 +769,7 @@ class SudokuBoard {
     for (let i = 0, len = indii.length; i < len; i++) {
       indii[i] = i;
     }
-    indii = __WEBPACK_IMPORTED_MODULE_0__util__["b" /* randShuffle */](indii);
+    indii = __WEBPACK_IMPORTED_MODULE_0__util__["c" /* randShuffle */](indii);
     for (let i = 0, len = cell.possibles.length; i < len; i++) {
       let posIdx = indii[i];
       if (cell.possibles[posIdx]) {
@@ -755,7 +796,7 @@ class SudokuBoard {
         idxs.push(i);
       }
     }
-    idxs = __WEBPACK_IMPORTED_MODULE_0__util__["b" /* randShuffle */](idxs);
+    idxs = __WEBPACK_IMPORTED_MODULE_0__util__["c" /* randShuffle */](idxs);
     for (let i = 0, len = Math.min(num, this.cells.length); i < len; i++) {
       this.cells[idxs.pop()].currentValue = 0;
     }
@@ -1062,17 +1103,18 @@ const randShuffle = (array) => {
 
   return array;
 };
-/* harmony export (immutable) */ __webpack_exports__["b"] = randShuffle;
+/* harmony export (immutable) */ __webpack_exports__["c"] = randShuffle;
 
 
-const programaticShuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
+const programmaticShuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
   if (sidx >= eidx) return;
   let mid = Math.floor((sidx + eidx) / 2);
   shuffleHelper(arr, sidx, eidx);
-  programaticShuffle(arr, sidx, mid);
-  programaticShuffle(arr, mid + 1, eidx);
+  programmaticShuffle(arr, sidx, mid);
+  programmaticShuffle(arr, mid + 1, eidx);
+  return arr;
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = programaticShuffle;
+/* harmony export (immutable) */ __webpack_exports__["b"] = programmaticShuffle;
 
 
 
@@ -1099,14 +1141,15 @@ const shuffleHelper = (arr,sidx, eidx) => {
 /* unused harmony export shuffleHelper */
 
 
-const programaticDeshuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
+const programmaticDeshuffle = (arr, sidx = 0, eidx = arr.length - 1) => {
   if (sidx >= eidx) return;
   let mid = Math.floor((sidx + eidx) / 2);
-  programaticDeshuffle(arr, sidx, mid);
-  programaticDeshuffle(arr, mid + 1, eidx);
+  programmaticDeshuffle(arr, sidx, mid);
+  programmaticDeshuffle(arr, mid + 1, eidx);
   deshuffleHelper(arr, sidx, eidx);
+  return arr;
 };
-/* unused harmony export programaticDeshuffle */
+/* harmony export (immutable) */ __webpack_exports__["a"] = programmaticDeshuffle;
 
 
 const deshuffleHelper = (arr,sidx, eidx) => {
